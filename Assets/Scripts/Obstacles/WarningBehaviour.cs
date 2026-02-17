@@ -11,7 +11,6 @@ public class WarningBehaviour : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= timerLimit)
         {
-            Debug.Log("Warning Destroyed!");
             Destroy(gameObject);
         }
     }

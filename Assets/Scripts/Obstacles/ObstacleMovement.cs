@@ -5,8 +5,7 @@ using UnityEngine;
 public class ObstacleMovement : MonoBehaviour
 {
     [SerializeField] private float minSpeed = 1f, maxSpeed = 3f;
-    [SerializeField] private GameObject obstacle;    
-    private HealthManagement healthManagement;
+    [SerializeField] private GameObject obstacle;
     private float movSpeed;
     public float deadZone = -7;
 
@@ -28,7 +27,6 @@ public class ObstacleMovement : MonoBehaviour
             maxSpeed = 16f;
         }
         movSpeed = Random.Range(minSpeed, maxSpeed);
-        healthManagement = GameObject.FindObjectOfType<HealthManagement>();
     }
 
     // Update is called once per frame
@@ -36,10 +34,16 @@ public class ObstacleMovement : MonoBehaviour
     {
         transform.position = transform.position + Vector3.down * movSpeed * Time.deltaTime; // Movement
 
-        if (transform.position.y < deadZone) // Destroy surpassed obstacles
+        if (GameControl.isPaused == 1)
         {
-            Destroy(obstacle);
-        }        
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
+
+        OnBecameInvisible();        
     }
     private void OnTriggerEnter2D(Collider2D collider) // Collisions trigger
     {
@@ -52,7 +56,13 @@ public class ObstacleMovement : MonoBehaviour
         else if (collider.CompareTag("Player"))
         {
             Destroy(gameObject);
-            healthManagement.TakeDamage(1);
+            HealthManagement.instance.TakeDamage(1);
         }
+    }
+
+    private void OnBecameInvisible() // Destroy obstacle when out of screen
+    {
+        if(transform.position.y < deadZone)
+            Destroy(obstacle);
     }
 }

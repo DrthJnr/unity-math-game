@@ -14,7 +14,7 @@ public class ObstacleSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {               
-        if (GameControl.stopGame == 1)
+        if (GameControl.isPaused == 1)
         {
             Time.timeScale = 0f;
         } else 
@@ -40,42 +40,13 @@ public class ObstacleSpawner : MonoBehaviour
         switch (GameControl.difficulty)
         {
             case 0:
-                if (diffTimer >= 10 && diffTimer <= 11)
-                {
-                    spawnDelay = 7f;
-                }
-                else if (diffTimer >= 15 && diffTimer <= 16)
-                {                    
-                    spawnDelay = 5f;
-                }
-                    break;
+                SetGameDifficulty(11f, 7f, 15f, 5f, 60f, 4f);
+                break;
             case 1:
-                if (diffTimer <= 2)
-                {                    
-                    spawnDelay = 6f;
-                }
-                if (diffTimer >= 10 && diffTimer <= 11)
-                {                    
-                    spawnDelay = 4f;
-                }
-                else if (diffTimer >= 15 && diffTimer <= 16)
-                {                    
-                    spawnDelay = 1.5f;
-                }
+                SetGameDifficulty(2f, 6f, 10f, 4f, 20f, 1.5f);
                 break;
             case 2:
-                if (diffTimer <= 2)
-                {
-                    spawnDelay = 7f;
-                }
-                if (diffTimer >= 10 && diffTimer <= 11)
-                {
-                    spawnDelay = 3f;
-                }
-                 if (diffTimer >= 2 && diffTimer <= 21)
-                {
-                    spawnDelay = 1; // 1.5f
-                }
+                SetGameDifficulty(2f, 7f, 10f, 3f, 20f, 1f);                
                 break;
 
         }
@@ -96,5 +67,21 @@ public class ObstacleSpawner : MonoBehaviour
     {
         Instantiate(obstacle, new Vector3(rRange, transform.position.y, 0), transform.rotation);
         isWarningSpawned = 0;
+    }
+
+    private void SetGameDifficulty(float timerOne, float spawnDelayOne, float timerTwo, float spawnDelayTwo, float timerThree, float spawnDelayThree)
+    {
+     if (diffTimer <= timerOne)
+                {
+                    spawnDelay = spawnDelayOne;
+                }
+                if (diffTimer >= timerTwo && diffTimer <= timerTwo + 1)
+                {
+                    spawnDelay = spawnDelayTwo;
+                }
+                 if (diffTimer >= timerThree && diffTimer <= timerThree + 1)
+                {
+                    spawnDelay = spawnDelayThree;
+                }   
     }
 }

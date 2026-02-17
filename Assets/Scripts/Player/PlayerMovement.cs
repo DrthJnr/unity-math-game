@@ -1,69 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
     public Transform spawner;
     public GameObject Player;
     public float spawnerOffsetX = 2f;   // quanto ele deve ficar � direita
-    public float speed = 10f;
-    private float horizontal;
-    private float jumpingPower = 19f;
+    public float moveSpeed = 10f;
+    private Vector2 moveInput;
+    private PlayerInput playerInput;
+    public float jumpForce = 15f; // Fazer privado depois
+    public float fallMultiplier = 2.5f; // Fazer privado depois
+    public float lowJumpMultiplier = 3f; // Fazer privado depois
+    private bool isjumping = false;
     private bool isFacingRight = true;
-    [SerializeField] private Rigidbody2D rb;
+    private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private HealthManagement healthManagement;
-    private ButtonsFunctions buttonsFunctions;
 
+    private ButtonsFunctions buttonsFunctions;
     private void Start()
     {
-        buttonsFunctions = GameObject.FindObjectOfType<ButtonsFunctions>();
+        buttonsFunctions = GameObject.FindFirstObjectByType<ButtonsFunctions>();
+    }
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        playerInput = GetComponent<PlayerInput>();
     }
     // Update is called once per frame
     void Update()
     {
-    #if UNITY_STANDALONE
-        if (!BoolUseButton.useButtonControl)
-        {
-            horizontal = Input.GetAxisRaw("Horizontal");
-        }
-        float moveInput = Input.GetAxisRaw("Horizontal");
-
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && IsGrounded())
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
-        }
-
-        if ((Input.GetKeyUp(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            buttonsFunctions.Shoot();
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            buttonsFunctions.PauseGame();
-        }
-    #endif
-
-        Vector3 spawnerLocalPos = spawner.localPosition; // Spawner
-        spawnerLocalPos.x = isFacingRight ? Mathf.Abs(spawnerOffsetX) : -Mathf.Abs(spawnerOffsetX);
-        spawner.localPosition = spawnerLocalPos;
+        moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
         Flip();
+    }
 
-    }
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(horizontal * speed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+        }
+        else if (rb.linearVelocity.y > 0 && !isjumping)
+        {
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+        }
     }
+    
     private void Flip()
     {
-        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+        if (isFacingRight && moveInput.x < 0f || !isFacingRight && moveInput.x > 0f)
         {
             isFacingRight = !isFacingRight;
             Vector3 localScale = transform.localScale;
@@ -75,32 +68,24 @@ public class PlayerMovement : MonoBehaviour
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Jump();
+            isjumping = true;
+        }
+        if (context.canceled)
+        {
+            isjumping = false;
+        }
 
-    public void GoLeft()
-    {
-        Debug.Log("Bot�o GoLeft pressionado " + horizontal);
-        horizontal = -1f;
     }
-
-    public void GoRight()
-    {
-        Debug.Log("Bot�o GoRight pressionado " + horizontal);
-        horizontal = 1f;
-    }
-    public void StopMoving()
-    {
-        horizontal = 0f;
-    }
-    public void Jump()
+    private void Jump()
     {
         if (IsGrounded())
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingPower);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
     }
-    public void Jump2()
-    {
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
-    }
-    
 }

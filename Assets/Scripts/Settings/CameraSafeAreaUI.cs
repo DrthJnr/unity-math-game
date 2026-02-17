@@ -5,6 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(RectTransform))]
 public class CameraSafeAreaUI : MonoBehaviour
 {
+    // Remember how to use:
+    // Attach this script to any UI element you want to fit within the camera's safe area
+
     public Camera mainCamera;
 
     void Start()
@@ -21,4 +24,3 @@ public class CameraSafeAreaUI : MonoBehaviour
         rt.offsetMax = Vector2.zero;
     }
 }
-

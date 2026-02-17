@@ -6,22 +6,34 @@ using UnityEngine.UIElements;
 using UnityEngine.UI;
 using System.Threading;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.InputSystem;
+
+// Refactor EVERYTHING to other scripts
 
 public class ButtonsFunctions : MonoBehaviour
 {
-    [SerializeField] private string Menu;    
-    [SerializeField] private string GameScene;
-    [SerializeField] private string Store;
-    [SerializeField] private GameObject PlaySettings;
-    [SerializeField] private GameObject GameSettings;
-    [SerializeField] private GameObject Bullet;
-    public UnityEngine.UI.Button delayButton;
     public GameObject pauseMenu;
     public GameObject gameOverMenu;
-    private bool canBePressed = true;
-    [SerializeField] private float waitTime = 1.5f;
 
-    public void EnterMenu()
+    void Update()
+    {
+        if (pauseMenu != null && GameControl.isPaused == 0)
+        {
+            pauseMenu.SetActive(false);
+        } else if (pauseMenu != null && GameControl.isPaused == 1)
+        {
+            pauseMenu.SetActive(true);
+        }
+        if (gameOverMenu != null && GameControl.isGameOver == 0)
+        {
+            gameOverMenu.SetActive(false);
+        } else if (gameOverMenu != null && GameControl.isGameOver == 1)
+        {
+            gameOverMenu.SetActive(true);
+        }
+    }
+
+    public static void EnterMenu()
     {        
         switch (GameControl.difficulty)
         {
@@ -36,44 +48,7 @@ public class ButtonsFunctions : MonoBehaviour
                 break;
         }
 
-        SceneManager.LoadScene(Menu);
-        ResumeGame();
-    }
-
-    public void EasyGame()
-    {        
-        GameControl.difficulty = 0;
-        GameControl.score = 0;
-        if (gameOverMenu != null)
-        {
-            gameOverMenu.SetActive(false);
-        }
-        Debug.Log("Difficulty : " + GameControl.difficulty);
-        SceneManager.LoadScene(GameScene);
-        ResumeGame();
-    }
-    public void NormalGame()
-    {        
-        GameControl.difficulty = 1;
-        GameControl.score = 0;
-        if (gameOverMenu != null)
-        {
-            gameOverMenu.SetActive(false);
-        }
-        Debug.Log("Difficulty : " + GameControl.difficulty);
-        SceneManager.LoadScene(GameScene);
-        ResumeGame();
-    }
-    public void HardGame()
-    {        
-        GameControl.difficulty = 2;
-        GameControl.score = 0;
-        if (gameOverMenu != null)
-        {
-            gameOverMenu.SetActive(false);
-        }
-        Debug.Log("Difficulty : " + GameControl.difficulty);
-        SceneManager.LoadScene(GameScene);
+        SceneManager.LoadScene("Menu");
         ResumeGame();
     }
 
@@ -82,72 +57,23 @@ public class ButtonsFunctions : MonoBehaviour
         Application.Quit();
     }
 
-    public void OpenGSettings()
-    {
-        GameSettings.SetActive(true);
-    }
-
-    public void OpenPSettings()
-    {
-        PlaySettings.SetActive(true);
-    }
-
-    public void CloseSettings()
-    {
-        GameSettings.SetActive(false);
-        PlaySettings.SetActive(false);
-    }
-
-    public void Shoot()
-    {
-        if (canBePressed)
-        {
-            Instantiate(Bullet, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
-            StartCoroutine(DelayButton());
-        }
-
-    }
-
-    private IEnumerator DelayButton()
-    {
-        canBePressed = false;
-        delayButton.interactable = false;
-        yield return new WaitForSeconds(waitTime);
-        delayButton.interactable = true;
-        canBePressed = true;
-    }
-
-
-
     public void PauseGame()
     {
-        GameControl.stopGame = 1;
-        if (pauseMenu != null)
-        {
-            pauseMenu.SetActive(true);
-        }
+        GameControl.isPaused = 1;
         Debug.Log(Time.timeScale);
     }
-    public void ResumeGame()
+    static void ResumeGame()
     {
-        GameControl.stopGame = 0;
-        if (pauseMenu != null)
-        {
-            pauseMenu.SetActive(false);
-        }
-        Debug.Log(Time.timeScale);
+        GameControl.isPaused = 0;
     }
-    public void OpenStore()
-    {
-        SceneManager.LoadScene(Store);
-    }
-}
-public static class GameControl
-{
-    // easy = 0 medium = 1 hard = 2
-    // stopGame 0 = run 1 = pause
-    // newQuestion 0 = no 1 = generate new question
-    // score = player score
 
-    public static int difficulty, stopGame, newQuestion, score, easyHScore, mediumHScore, hardHScore;
+    public void ResumeGameButton()
+    {
+        ResumeGame();
+    }
+
+    public void OpenStoreButton()
+    {
+        MenuButtons.OpenStore();
+    }
 }

@@ -4,23 +4,22 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Ground
+  - Answer
   - Bullet
   - Obstacle
-  - Easy
   - Hard
   - Normal
-  - Pause
-  - GameOver
-  - Answer
+  - Easy
+  - PauseMenu
+  - GameOverMenu
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Ground
+  - 
   - Water
   - UI
-  - Background
+  - Ground
   - 
   - 
   - 

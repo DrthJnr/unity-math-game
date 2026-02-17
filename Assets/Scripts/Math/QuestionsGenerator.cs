@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+// Generates math questions based on the selected difficulty level.
+// Refactor to include other operations in the future and improve code structure.
+
 public class QuestionsGenerator : MonoBehaviour
 {
     public static QuestionsGenerator Instance;
     public GameObject Question;
     private TextMeshProUGUI QuestionText;
     [SerializeField] private TextMeshProUGUI scoreText;
-    public int firstN, secondN, op, rand1, rand2, answer;
+    public int firstNumber, secondNumber, op, randomOne, randomTwo, answer;
 
 
     private void Start()
@@ -31,42 +34,41 @@ public class QuestionsGenerator : MonoBehaviour
                 op = Random.Range(1, 3);
                 do
                 {
-                firstN = Random.Range(1, 20);
-                secondN = Random.Range(1, 20);
-                answer = firstN + secondN;
-                rand1 = Random.Range(3, 40);
-                rand2 = Random.Range(3, 40);
-                } while (rand1 == answer || rand2 == answer || rand1 == rand2);
+                firstNumber = Random.Range(1, 20);
+                secondNumber = Random.Range(1, 20);
+                answer = firstNumber + secondNumber;
+                randomOne = Random.Range(3, 40);
+                randomTwo = Random.Range(3, 40);
+                } while (randomOne == answer || randomTwo == answer || randomOne == randomTwo);
             } else if(GameControl.difficulty == 1)
             {
                 op = Random.Range(1, 5);
                 do
                 {
-                    firstN = Random.Range(20, 100);
-                    secondN = Random.Range(20, 100);
-                    answer = firstN + secondN;
-                    rand1 = Random.Range(40, 200);
-                    rand2 = Random.Range(40, 200);
-                } while (rand1 == answer || rand2 == answer || rand1 == rand2);
+                    firstNumber = Random.Range(20, 100);
+                    secondNumber = Random.Range(20, 100);
+                    answer = firstNumber + secondNumber;
+                    randomOne = Random.Range(40, 200);
+                    randomTwo = Random.Range(40, 200);
+                } while (randomOne == answer || randomTwo == answer || randomOne == randomTwo);
             }
             else
             {
                 op = Random.Range(1, 5);
                 do
                 {
-                    firstN = Random.Range(100, 1000);
-                    secondN = Random.Range(100, 1000);
-                    answer = firstN + secondN;
-                    rand1 = Random.Range(200, 2000);
-                    rand2 = Random.Range(200, 2000);
-                } while (rand1 == answer || rand2 == answer || rand1 == rand2);
+                    firstNumber = Random.Range(100, 1000);
+                    secondNumber = Random.Range(100, 1000);
+                    answer = firstNumber + secondNumber;
+                    randomOne = Random.Range(200, 2000);
+                    randomTwo = Random.Range(200, 2000);
+                } while (randomOne == answer || randomTwo == answer || randomOne == randomTwo);
             }
             
 
             GameControl.newQuestion = 0;
         }        
-        QuestionText.text = $"Pergunta : {firstN} + {secondN}";
-
+        QuestionText.text = $"Pergunta : {firstNumber} + {secondNumber}";
         scoreText.text = $"Pontos : {GameControl.score}";
     }
 
