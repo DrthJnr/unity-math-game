@@ -1,5 +1,5 @@
 # Desafio da Matemática
-### In Prototype Phase
+### Version 0.1.0 - alpha
 
 ## Main objective
 This game is a project created in a Brazilian school in Japan. Its goal is to help young students improve their fast-thinking and math skills while still having fun and tracking their progress.
@@ -15,10 +15,11 @@ After choosing one of the three difficulties — easy, medium, or hard — the p
 - Two arrows pointing in opposite directions for left and right movement
 - Jump arrow
 - Shoot button
-A question is displayed on the board, and three books come from the right, each one containing an answer, but only one is correct. The player can either shoot at the answer or touch it with the character.
+- Shield button
+A question is displayed, and three books come from the right, each one containing an answer, but only one is correct. The player can either shoot at the answer or touch it with the character.
 
 ### Obstacles
-Obstacles come from above, with a warning sign every time an obstacle spawns. If one hits the player, it will decrease the player's health by 1. Obstacles can also be destroyed by the player shooting at them.
+Obstacles come from above, with a warning sign every time an obstacle spawns. If one hits the player, it will decrease the player's health by 1. Obstacles can also be destroyed by the player shooting at or the shield touching them.
 
 ### Difficulties
 There are three different difficulties the player can choose, each one affecting the gameplay's pace:
@@ -45,8 +46,23 @@ I am responsible for working with Unity, creating all the code and implementing 
 - Student C - character art & design (not implemented yet)
 
 ## To Be Implemented
-- Special attack mechanic (unlockable in the store)
 - Scenario completion
 - Sound implementation
 - Addicional gameplay polish
 - SQLite Database implementation for efficiency
+
+
+## MAJOR UPDATES (30/01/2026 ~ 18/02/2026)
+
+#### (Gameplay)
+
+- Added shield (2 levels)
+- Scenario removed for now
+- Sprites updated (No animation yet)
+- Difficulties balanced
+- GUI updates
+
+#### (Project structure)
+
+- Editor updated to 6000.3.8f1
+- Scripts are now more organized, flexible and modular
